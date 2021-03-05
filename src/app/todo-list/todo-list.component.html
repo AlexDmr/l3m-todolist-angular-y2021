@@ -1,7 +1,7 @@
 <section class="todoapp" *ngIf="obsTodoList | async as TDL">
   <header class="header">
     <h1>{{TDL.label}}</h1>
-    <form>
+    <form (ngSubmit)="append(lab.value); lab.value='' ">
       <input  name        = "newTodoInput"
               class       = "new-todo"
               placeholder = "Que faire?"
@@ -15,6 +15,16 @@
     />
     <label for="toggleAll">Mark all as complete</label>
     <ul class="todo-list">
+      <li *ngFor = "let item of TDL.items"
+          [class.completed] = "item.isDone"
+          [class.editing]   = "compoItem.isEditing"
+      >
+        <app-todo-item [data]   = "item"
+                       (remove) = "delete(item)"
+                       (update) = "updateItem(item, $event)"
+                       #compoItem
+        ></app-todo-item>
+      </li>
     </ul>
   </section>
   <footer class="footer">
