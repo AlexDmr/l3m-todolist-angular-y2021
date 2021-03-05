@@ -31,4 +31,7 @@ export class TodoListComponent implements OnInit {
     this.TDLS.remove(item);
   }
 
+  trackById(i: number, e: TodoItem): number {
+    return e.id;
+  }
 }

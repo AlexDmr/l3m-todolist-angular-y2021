@@ -14,9 +14,12 @@
             (click) = "remove.emit(data)"
     ></button>
   </div>
-  <form>
+
+  <form (ngSubmit)="changeLabel(newTextInput.value)">
     <input  #newTextInput
             name      = "newTextInput"
             class     = "edit"
+            [ngModel] = "data.label"
+            (blur)    = "changeLabel(newTextInput.value)"
     />
-</form>
+  </form>

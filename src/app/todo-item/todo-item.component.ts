@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { TodoItem } from '../todolist.service';
 
 @Component({
@@ -11,12 +11,24 @@ export class TodoItemComponent implements OnInit {
   @Input () data!: TodoItem;
   @Output() update = new EventEmitter<Partial<TodoItem>>();
   @Output() remove = new EventEmitter<TodoItem>();
+  @ViewChild('newTextInput') newTextInput!: ElementRef<HTMLInputElement>;
 
-  isEditing = false;
-
-  constructor() { }
+  private _isEditing = false;
+  get isEditing(): boolean {return this._isEditing;}
+  set isEditing(e: boolean) {
+    this._isEditing = e;
+    if (e) {
+      requestAnimationFrame(
+        () => this.newTextInput.nativeElement.focus()
+      );
+    }
+  }
 
   ngOnInit(): void {
   }
 
+  changeLabel(label: string): void {
+    this.update.emit({label}); // équivaut à {label: label}
+    this.isEditing = false;
+  }
 }

@@ -15,7 +15,7 @@
     />
     <label for="toggleAll">Mark all as complete</label>
     <ul class="todo-list">
-      <li *ngFor = "let item of TDL.items"
+      <li *ngFor = "let item of TDL.items; trackBy: trackById;"
           [class.completed] = "item.isDone"
           [class.editing]   = "compoItem.isEditing"
       >
