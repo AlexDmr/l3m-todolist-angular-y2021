@@ -1,4 +1,4 @@
-<section class="todoapp" *ngIf="obsTodoList | async as TDL">
+<section class="todoapp" *ngIf="obsTodoAll | async as TDL">
   <header class="header">
     <h1>{{TDL.label}}</h1>
     <form (ngSubmit)="append(lab.value); lab.value='' ">
@@ -12,10 +12,14 @@
     <input  class="toggle-all"
             type="checkbox"
             name="toggleAll"
+            [ngModel] = "TDL.isAllDone"
     />
-    <label for="toggleAll">Mark all as complete</label>
+    <label for="toggleAll"
+           (click) = "updateItems(TDL.items, {isDone: !TDL.isAllDone})"
+    >Mark all as complete</label>
+
     <ul class="todo-list">
-      <li *ngFor = "let item of TDL.items; trackBy: trackById;"
+      <li *ngFor = "let item of TDL.items.filter(f); trackBy: trackById;"
           [class.completed] = "item.isDone"
           [class.editing]   = "compoItem.isEditing"
       >
@@ -27,19 +31,28 @@
       </li>
     </ul>
   </section>
-  <footer class="footer">
-    <span class="todo-count"><strong></strong> restantes</span>
+  <footer class="footer" *ngIf="TDL.items.length > 0">
+    <span class="todo-count"><strong>{{ TDL.remaining }}</strong> restantes</span>
     <ul class="filters">
       <li>
-        <a class="filterAll">Tous</a>
+        <a class="filterAll" [class.selected] = "f === fAll"
+                             (click) = "f = fAll"
+        >Tous</a>
       </li>
       <li>
-        <a class="filterActives">Actifs</a>
+        <a class="filterActives" [class.selected] = "f === fActive"
+                                 (click) = "f = fActive"
+        >Actifs</a>
       </li>
       <li>
-        <a class="filterCompleted">Complétés</a>
+        <a class="filterCompleted" [class.selected] = "f === fCompleted"
+                                   (click) = "f = fCompleted"
+        >Complétés</a>
       </li>
     </ul>
-    <button class="clear-completed">Supprimer cochées</button>
+    <button class="clear-completed"
+            (click) = "deleteItems( TDL.items.filter( fCompleted ) )"
+            *ngIf = "TDL.remaining < TDL.items.length"
+    >Supprimer cochées</button>
   </footer>
 </section>
